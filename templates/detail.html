@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vaka Detayı</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Vaka Detayı</h1>
+
+      <div class="panel">
+        <p><b>Ekleyen:</b> {{ case.creator_name }}</p>
+        <p><b>Hedef türü:</b> {{ case.target_type }}</p>
+        <p><b>Hedef URL:</b> {{ case.target_url or "-" }}</p>
+        <p><b>Rapor nedeni:</b> {{ case.reason }}</p>
+        <p><b>Aciliyet:</b> {{ case.urgency }}</p>
+        <p><b>Kanıt linkleri:</b> {{ case.evidence_links or "-" }}</p>
+        <p><b>Oluşturma tarihi:</b> {{ case.created_at }}</p>
+        <p><b>Notlar:</b> {{ case.notes or "-" }}</p>
+      </div>
+
+      <form method="POST" action="/update/{{ case.id }}" class="panel">
+        <h2>Durum güncelle</h2>
+
+        <label>
+          Durum
+          <select name="status">
+            <option value="new" {% if case.status == 'new' %}selected{% endif %}>Yeni</option>
+            <option value="in_review" {% if case.status == 'in_review' %}selected{% endif %}>İnceleniyor</option>
+            <option value="approved" {% if case.status == 'approved' %}selected{% endif %}>Onaylandı</option>
+            <option value="rejected" {% if case.status == 'rejected' %}selected{% endif %}>Reddedildi</option>
+            <option value="closed" {% if case.status == 'closed' %}selected{% endif %}>Kapandı</option>
+          </select>
+        </label>
+
+        <label>
+          Notlar
+          <textarea name="notes" rows="5">{{ case.notes or "" }}</textarea>
+        </label>
+
+        <button type="submit">Güncelle</button>
+      </form>
+
+      <div class="actions">
+        <a href="/" class="link-button">Ana sayfaya dön</a>
+        <a href="/delete/{{ case.id }}" class="danger-link">Vaka sil</a>
+      </div>
+    </div>
+  </body>
+</html>

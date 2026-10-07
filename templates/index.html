@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Case Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Report Case Manager</h1>
+
+      <form method="POST" action="/add" class="panel">
+        <h2>Yeni vaka ekle</h2>
+
+        <div class="grid">
+          <label>
+            Kullanıcı adı
+            <input type="text" name="creator_name" required />
+          </label>
+
+          <label>
+            Hedef türü
+            <select name="target_type">
+              <option value="profile">Profil</option>
+              <option value="post">Gönderi</option>
+              <option value="account">Hesap</option>
+              <option value="page">Sayfa</option>
+            </select>
+          </label>
+
+          <label class="full">
+            Hedef URL
+            <input type="url" name="target_url" placeholder="https://..." />
+          </label>
+
+          <label class="full">
+            Rapor nedeni
+            <input type="text" name="reason" required />
+          </label>
+
+          <label>
+            Aciliyet
+            <select name="urgency">
+              <option value="low">Düşük</option>
+              <option value="medium" selected>Orta</option>
+              <option value="high">Yüksek</option>
+            </select>
+          </label>
+
+          <label class="full">
+            Kanıt linkleri
+            <input type="text" name="evidence_links" placeholder="Ek dosya, ekran görüntüsü, URL" />
+          </label>
+
+          <label class="full">
+            Notlar
+            <textarea name="notes" rows="4"></textarea>
+          </label>
+        </div>
+
+        <button type="submit">Vaka oluştur</button>
+      </form>
+
+      <div class="panel">
+        <h2>Vaka listesi</h2>
+
+        {% if cases %}
+          <div class="case-list">
+            {% for case in cases %}
+              <div class="case-card">
+                <div class="case-header">
+                  <strong>{{ case.creator_name }}</strong>
+                  <span class="badge status-{{ case.status }}">{{ case.status }}</span>
+                </div>
+                <p><b>Tür:</b> {{ case.target_type }}</p>
+                <p><b>Gerekçe:</b> {{ case.reason }}</p>
+                <p><b>Aciliyet:</b> {{ case.urgency }}</p>
+                <p><b>Oluşturma:</b> {{ case.created_at }}</p>
+                <a href="/case/{{ case.id }}">Detayları aç</a>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>Henüz vaka eklenmemiş.</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
